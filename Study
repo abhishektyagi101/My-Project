@@ -1,1 +1,22 @@
 https://github.com/krishnaik06/AQI-Project
+from sklearn.preprocessing import MinMaxScaler
+sc = MinMaxScaler(feature_range = (0, 1))
+x = data_filter['String']
+y = data_filter[['Tag']].values
+y_sc = sc.fit_transform(y)
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(x, y_sc, test_size=0.2, random_state=42)
+import keras
+from keras.models import Sequential
+from keras.layers import LSTM
+from keras.layers import Dense
+from keras.layers import Dropout
+regressor = Sequential()
+regressor.add(LSTM(units = 50, return_sequences = True))
+regressor.add(Dropout(0.2))
+regressor.add(LSTM(units = 50, return_sequences = True))
+regressor.add(Dropout(0.2))
+regressor.add(LSTM(units = 50))
+regressor.add(Dropout(0.2))
+regressor.add(Dense(units = 1))
+regressor.compile(optimizer = 'adam', loss = 'mean_squared_error')
